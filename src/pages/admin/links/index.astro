@@ -1,0 +1,73 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import AppShell from "@/components/layout/AppShell";
+import LinkCards from "@/components/cards/LinkCards";
+import Button from "@/components/ui/Button";
+import LinksTable from "@/components/tables/LinksTable";
+
+
+import { getLinks } from "@/services/links";
+
+const links = await getLinks();
+
+const origin = Astro.url.origin;
+---
+
+<DashboardLayout title="Links">
+
+<AppShell client:load>
+
+<div class="space-y-6">
+
+<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+<div>
+
+<h1 class="text-3xl font-bold">
+
+Links
+
+</h1>
+
+<p class="text-zinc-500">
+
+Manage your short links.
+
+</p>
+
+</div>
+
+<a
+  href="/admin/links/create"
+  class="inline-block"
+>
+  <Button client:load>
+    + Create Link
+  </Button>
+</a>
+
+</div>
+
+<div class="hidden lg:block">
+
+<LinksTable
+client:load
+links={links}
+origin={origin}
+/>
+
+</div>
+
+<div class="lg:hidden">
+  <LinkCards
+    client:load
+    links={links}
+    origin={origin}
+  />
+</div>
+
+</div>
+
+</AppShell>
+
+</DashboardLayout>

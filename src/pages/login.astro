@@ -1,0 +1,104 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+---
+
+<PublicLayout title="Login">
+  <main class="flex min-h-screen items-center justify-center px-4 py-10">
+    <div class="w-full max-w-md rounded-3xl border border-zinc-200 bg-white p-10 shadow-xl">
+      <!-- Logo -->
+      <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-900 text-2xl font-bold text-white">
+        AP
+      </div>
+
+      <h1 class="mt-8 text-center text-3xl font-bold">
+        Welcome Back
+      </h1>
+
+      <p class="mt-3 text-center leading-6 text-zinc-500">
+        Sign in to continue managing your links.
+      </p>
+
+      <form id="loginForm" class="mt-10 space-y-5">
+        <div>
+          <label class="mb-2 block text-sm font-medium text-zinc-700">
+            Email
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            class="h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 outline-none transition focus:border-zinc-900"
+          />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-medium text-zinc-700">
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            class="h-12 w-full rounded-xl border border-zinc-200 bg-white px-4 outline-none transition focus:border-zinc-900"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="flex h-12 w-full items-center justify-center rounded-xl bg-zinc-900 font-medium text-white transition hover:bg-zinc-800"
+        >
+          Login
+        </button>
+
+        <p
+          id="message"
+          class="text-center text-sm text-red-500"
+        ></p>
+      </form>
+
+      <div class="mt-8 border-t border-zinc-200 pt-6 text-center text-sm text-zinc-500">
+        Don't have an account?
+
+        <a
+          href="/register"
+          class="font-medium text-zinc-900 hover:underline"
+        >
+          Register
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    const form = document.querySelector("#loginForm");
+    const message = document.querySelector("#message");
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      message.textContent = "";
+
+      const email = document.querySelector("#email").value;
+      const password = document.querySelector("#password").value;
+
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (res.ok) {
+        window.location.href = "/admin";
+      } else {
+        message.textContent = await res.text();
+      }
+    });
+  </script>
+</PublicLayout>

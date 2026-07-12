@@ -1,0 +1,31 @@
+---
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+}
+
+const { title = "Dashboard" } = Astro.props;
+import { Toaster } from "sonner";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>{title}</title>
+  </head>
+
+  <body class="bg-zinc-50 text-zinc-900 antialiased">
+    <slot />
+    <Toaster
+  client:load
+  richColors
+  position="top-right"
+/>
+  </body>
+</html>

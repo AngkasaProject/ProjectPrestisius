@@ -1,0 +1,35 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import AppShell from "@/components/layout/AppShell";
+import LinkForm from "@/components/forms/LinkForm";
+const origin = Astro.url.origin;
+---
+
+<DashboardLayout title="Create Link">
+
+  <AppShell client:load>
+
+    <div class="mx-auto max-w-3xl">
+
+      <div class="mb-6">
+
+        <h1 class="text-3xl font-bold">
+          Create Link
+        </h1>
+
+        <p class="mt-1 text-zinc-500">
+          Create a new short link.
+        </p>
+
+      </div>
+
+      <LinkForm
+  client:load
+  origin={origin}
+/>
+
+    </div>
+
+  </AppShell>
+
+</DashboardLayout>

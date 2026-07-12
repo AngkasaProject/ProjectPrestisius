@@ -1,0 +1,49 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import AppShell from "@/components/layout/AppShell";
+
+import LinkForm from "@/components/forms/LinkForm";
+
+import { getLinkById } from "@/services/links";
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/admin/links");
+}
+
+const link = await getLinkById(id);
+
+const origin = Astro.url.origin;
+---
+
+<DashboardLayout title="Edit Link">
+
+  <AppShell client:load>
+
+    <div class="space-y-6">
+
+      <div>
+
+        <h1 class="text-3xl font-bold">
+          Edit Link
+        </h1>
+
+        <p class="text-zinc-500">
+          Update your short link.
+        </p>
+
+      </div>
+
+      <LinkForm
+        client:load
+        origin={origin}
+        initialData={link}
+        mode="edit"
+      />
+
+    </div>
+
+  </AppShell>
+
+</DashboardLayout>

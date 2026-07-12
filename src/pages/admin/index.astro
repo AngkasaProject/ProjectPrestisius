@@ -1,0 +1,64 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import AppShell from "@/components/layout/AppShell";
+
+import Button from "@/components/ui/Button";
+
+import StatsGrid from "@/components/dashboard/StatsGrid";
+import RecentLinks from "@/components/dashboard/RecentLinks";
+
+import { getDashboardStats } from "@/services/dashboard";
+
+const stats = await getDashboardStats();
+
+const origin = Astro.url.origin;
+---
+
+<DashboardLayout title="Dashboard">
+
+  <AppShell client:load>
+
+    <div class="space-y-8">
+
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+
+          <h1 class="text-3xl font-bold">
+            Dashboard
+          </h1>
+
+          <p class="mt-1 text-zinc-500">
+            Welcome back. Here's what's happening today.
+          </p>
+
+        </div>
+
+        <a
+          href="/admin/links/create"
+          class="inline-block"
+        >
+          <Button client:load>
+            + Create Link
+          </Button>
+        </a>
+
+      </div>
+
+      <StatsGrid
+        client:load
+        stats={stats}
+      />
+
+   <div class="mt-8">
+  <RecentLinks
+    client:load
+    links={stats.recentLinks}
+    origin={origin}
+  />
+</div>
+
+    </div>
+
+  </AppShell>
+
+</DashboardLayout>
