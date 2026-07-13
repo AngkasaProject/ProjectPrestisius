@@ -3,6 +3,7 @@ import type { Link } from "@/types/link";
 import Button from "@/components/ui/Button";
 import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select";
+import { Shuffle } from "lucide-react";
 
 type SlugStatus = "idle" | "checking" | "available" | "taken";
 
@@ -22,6 +23,15 @@ function slugify(value: string) {
     .slice(0, 50);
 }
 
+function generateRandomSlug(length = 6) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+  return Array.from(
+    { length },
+    () => chars[Math.floor(Math.random() * chars.length)],
+  ).join("");
+}
+
 function isValidUrl(value: string) {
   try {
     const url = new URL(value);
@@ -38,7 +48,7 @@ export default function LinkForm({
   initialData,
 }: Props) {
   const [slug, setSlug] = useState(initialData?.slug ?? "");
-
+  const [generating, setGenerating] = useState(false);
   const [destination, setDestination] = useState(
     initialData?.destination_url ?? "",
   );
@@ -88,6 +98,31 @@ export default function LinkForm({
 
     return () => clearTimeout(timeout);
   }, [slug]);
+  async function handleGenerate() {
+    setGenerating(true);
+    setSlugStatus("checking");
+
+    while (true) {
+      const random = generateRandomSlug();
+
+      try {
+        const res = await fetch(`/api/links/check-slug?slug=${random}`);
+
+        const json = await res.json();
+
+        if (json.available) {
+          setSlug(random);
+          setSlugStatus("available");
+          break;
+        }
+      } catch {
+        setSlugStatus("idle");
+        break;
+      }
+    }
+
+    setGenerating(false);
+  }
 
   async function handleSave() {
     if (saving) return;
@@ -149,6 +184,24 @@ export default function LinkForm({
           placeholder="google"
           value={slug}
           onChange={(e) => setSlug(slugify(e.target.value))}
+          rightElement={
+            <button
+              type="button"
+              onClick={handleGenerate}
+              title="Generate random slug"
+              className="
+        rounded-lg
+        p-2
+        text-zinc-500
+        transition
+        hover:bg-zinc-100
+        hover:text-zinc-900
+        active:scale-95
+      "
+            >
+              <Shuffle size={18} className={generating ? "animate-spin" : ""} />
+            </button>
+          }
         />
 
         <div className="text-sm">

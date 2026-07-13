@@ -1,9 +1,9 @@
 ---
 import PublicLayout from "@/layouts/PublicLayout.astro";
-import LoginForm from "@/components/auth/LoginForm";
+import RegisterForm from "@/components/auth/RegisterForm";
 ---
 
-<PublicLayout title="Login">
+<PublicLayout title="Register">
   <main class="flex min-h-screen items-center justify-center px-4 py-10">
     <div class="w-full max-w-md rounded-3xl border border-zinc-200 bg-white p-10 shadow-xl">
       <!-- Logo -->
@@ -11,28 +11,27 @@ import LoginForm from "@/components/auth/LoginForm";
         AP
       </div>
 
+      <!-- Heading -->
       <h1 class="mt-8 text-center text-3xl font-bold">
-        Welcome Back
+        Create Account
       </h1>
 
       <p class="mt-3 text-center leading-6 text-zinc-500">
-        Sign in to continue managing your links.
+        Create your account to start managing your short links.
       </p>
 
-     <LoginForm client:load />
+      <RegisterForm client:load />
 
       <div class="mt-8 border-t border-zinc-200 pt-6 text-center text-sm text-zinc-500">
-        Don't have an account?
+        Already have an account?
 
         <a
-          href="/register"
-          class="font-medium text-zinc-900 hover:underline"
+          href="/login"
+          class="font-medium text-zinc-900 transition hover:underline"
         >
-          Register
+          Login
         </a>
       </div>
     </div>
   </main>
-
-  
 </PublicLayout>

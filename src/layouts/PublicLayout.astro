@@ -1,11 +1,15 @@
 ---
 import "@/styles/global.css";
-
+import { site } from "@/config/site";
 interface Props {
   title?: string;
+  description?: string;
 }
 
-const { title = "Angkasa Project" } = Astro.props;
+const {
+  title = site.title,
+  description = site.description,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -20,6 +24,30 @@ const { title = "Angkasa Project" } = Astro.props;
     />
 
     <title>{title}</title>
+
+<meta name="description" content={description} />
+
+<meta name="theme-color" content={site.themeColor} />
+
+<meta name="robots" content="index,follow" />
+
+<link rel="icon" href="/favicon.ico" />
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<link rel="manifest" href="/site.webmanifest" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={site.url} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:image" content={`${site.url}/og.png`} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={`${site.url}/og.png`} />
   </head>
 
   <body class="min-h-screen bg-linear-to-br from-zinc-100 via-white to-zinc-100 text-zinc-900 antialiased">

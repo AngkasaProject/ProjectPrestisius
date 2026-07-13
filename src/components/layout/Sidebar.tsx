@@ -1,13 +1,28 @@
 import Logo from "./Logo";
 import NavItem from "./NavItem";
+import { LogOut } from "lucide-react";
+import { supabase } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 type Props = {
   open: boolean;
   close: () => void;
   pathname: string;
+  user: User | null;
 };
 
-export default function Sidebar({ open, close, pathname }: Props) {
+async function handleLogout() {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  window.location.href = "/login";
+}
+
+export default function Sidebar({ open, close, pathname, user }: Props) {
   return (
     <>
       <div
@@ -63,14 +78,29 @@ lg:translate-x-0
 
         <div className="mt-auto border-t border-zinc-200 p-5">
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-full bg-zinc-200" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-200 font-semibold">
+              A
+            </div>
 
-            <div>
-              <p className="font-semibold">Administrator</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold">
+                {user?.user_metadata?.full_name ||
+                  user?.email?.split("@")[0] ||
+                  "User"}
+              </p>
 
-              <p className="text-xs text-zinc-500">admin@localhost</p>
+              <p className="text-xs text-zinc-500">{user?.email}</p>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-red-200 text-red-600 transition hover:bg-red-50"
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
         </div>
       </aside>
     </>
