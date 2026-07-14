@@ -7,15 +7,16 @@ import type { Link } from "@/types/link";
 import { Trash2 } from "lucide-react";
 import DeleteDialog from "@/components/dialogs/DeleteDialog";
 import Pagination from "@/components/ui/Pagination";
+import { getAccessToken } from "@/lib/auth/client";
 
 type Props = {
   links: Link[];
   origin: string;
 };
 
-export default function LinksTable({ links, origin }: Props) {
+export default function LinksTable({ origin }: Props) {
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
-  const [items, setItems] = useState(links);
+  const [items, setItems] = useState<Link[]>([]);
   const PAGE_SIZE = 10;
 
   const [page, setPage] = useState(1);
@@ -29,7 +30,31 @@ export default function LinksTable({ links, origin }: Props) {
 
   const [deletedId, setDeletedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  useEffect(() => {
+    async function loadLinks() {
+      try {
+        const token = await getAccessToken();
 
+        const res = await fetch("/api/links", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error();
+        }
+
+        const data = await res.json();
+
+        setItems(data);
+      } catch {
+        toast.error("Failed to load links");
+      }
+    }
+
+    loadLinks();
+  }, []);
   const filteredItems = useMemo(() => {
     const keyword = search.toLowerCase();
 

@@ -1,10 +1,23 @@
 import type { APIRoute } from "astro";
-
+import { getUserFromRequest } from "@/lib/auth/server";
 import { createLink, getLinks, checkSlug } from "@/services/links";
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request }) => {
   try {
-    const links = await getLinks();
+    const user = await getUserFromRequest(request);
+
+    if (!user) {
+      return Response.json(
+        {
+          message: "Unauthorized",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    const links = await getLinks(user.id);
 
     return Response.json(links);
   } catch {
@@ -22,7 +35,20 @@ export const GET: APIRoute = async () => {
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
+    const user = await getUserFromRequest(request);
 
+    if (!user) {
+      return Response.json(
+        {
+          message: "Unauthorized",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    console.log("USER:", user.id);
     if (!body.slug) {
       return Response.json(
         {
@@ -59,6 +85,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const link = await createLink({
+      user_id: user.id,
       slug: body.slug,
       destination_url: body.destination_url,
       mode: body.mode ?? "direct",
@@ -68,7 +95,8 @@ export const POST: APIRoute = async ({ request }) => {
     return Response.json(link, {
       status: 201,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
     return Response.json(
       {
         message: "Internal Server Error",

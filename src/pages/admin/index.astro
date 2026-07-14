@@ -4,12 +4,7 @@ import AppShell from "@/components/layout/AppShell";
 
 import Button from "@/components/ui/Button";
 
-import StatsGrid from "@/components/dashboard/StatsGrid";
-import RecentLinks from "@/components/dashboard/RecentLinks";
-
-import { getDashboardStats } from "@/services/dashboard";
-
-const stats = await getDashboardStats();
+import DashboardPage from "@/components/pages/DashboardPage";
 
 const origin = Astro.url.origin;
 ---
@@ -44,18 +39,10 @@ const origin = Astro.url.origin;
 
       </div>
 
-      <StatsGrid
-        client:load
-        stats={stats}
-      />
-
-   <div class="mt-8">
-  <RecentLinks
-    client:load
-    links={stats.recentLinks}
-    origin={origin}
-  />
-</div>
+<DashboardPage
+  client:load
+  origin={origin}
+/>
 
     </div>
 

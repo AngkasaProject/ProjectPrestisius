@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import type { Link } from "@/types/link";
 import LinkCard from "./LinkCard";
 import Pagination from "@/components/ui/Pagination";
+import { toast } from "sonner";
+import { getAccessToken } from "@/lib/auth/client";
 
 type Props = {
   links: Link[];
@@ -9,21 +11,48 @@ type Props = {
 };
 
 export default function LinkCards({ links, origin }: Props) {
+  const [items, setItems] = useState<Link[]>([]);
   const PAGE_SIZE = 10;
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
+  useEffect(() => {
+    async function loadLinks() {
+      try {
+        const token = await getAccessToken();
+
+        const res = await fetch("/api/links", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error();
+        }
+
+        const data = await res.json();
+
+        setItems(data);
+      } catch {
+        toast.error("Failed to load links");
+      }
+    }
+
+    loadLinks();
+  }, []);
+
   const filteredItems = useMemo(() => {
     const keyword = search.toLowerCase();
 
-    return links.filter((link) => {
+    return items.filter((link) => {
       return (
         link.slug.toLowerCase().includes(keyword) ||
         link.destination_url.toLowerCase().includes(keyword)
       );
     });
-  }, [links, search]);
+  }, [items, search]);
   useEffect(() => {
     setPage(1);
   }, [search]);

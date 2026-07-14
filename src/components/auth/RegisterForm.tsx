@@ -16,8 +16,16 @@ export default function RegisterForm() {
 
     const email = String(form.get("email"));
     const password = String(form.get("password"));
+    const fullName = String(form.get("full_name"));
+    const username = String(form.get("username"));
+    const confirmPassword = String(form.get("confirm_password"));
 
-    const { error } = await supabase.auth.signUp({
+    if (password !== confirmPassword) {
+      setMessage("Password confirmation does not match.");
+      setLoading(false);
+      return;
+    }
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -27,13 +35,52 @@ export default function RegisterForm() {
       setLoading(false);
       return;
     }
+    const user = data.user;
 
-    setSuccess(true);
-    setLoading(false);
+    if (!user) {
+      setMessage("Failed to create account.");
+      setLoading(false);
+      return;
+    }
+
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: user.id,
+      full_name: fullName,
+      username,
+    });
+
+    if (profileError) {
+      setMessage(profileError.message);
+      setLoading(false);
+      return;
+    }
+    window.location.href = "/admin";
   }
 
   return (
     <form onSubmit={handleSubmit} className="mt-10 space-y-5">
+      <div>
+        <label className="mb-2 block text-sm font-medium">Full Name</label>
+
+        <input
+          name="full_name"
+          type="text"
+          required
+          placeholder="John Doe"
+          className="h-12 w-full rounded-xl border border-zinc-200 px-4 outline-none focus:border-zinc-900"
+        />
+      </div>
+      <div>
+        <label className="mb-2 block text-sm font-medium">Username</label>
+
+        <input
+          name="username"
+          type="text"
+          required
+          placeholder="johndoe"
+          className="h-12 w-full rounded-xl border border-zinc-200 px-4 outline-none focus:border-zinc-900"
+        />
+      </div>
       <div>
         <label className="mb-2 block text-sm font-medium">Email</label>
 
@@ -51,6 +98,20 @@ export default function RegisterForm() {
 
         <input
           name="password"
+          type="password"
+          required
+          minLength={6}
+          placeholder="••••••••"
+          className="h-12 w-full rounded-xl border border-zinc-200 px-4 outline-none focus:border-zinc-900"
+        />
+      </div>
+      <div>
+        <label className="mb-2 block text-sm font-medium">
+          Confirm Password
+        </label>
+
+        <input
+          name="confirm_password"
           type="password"
           required
           minLength={6}

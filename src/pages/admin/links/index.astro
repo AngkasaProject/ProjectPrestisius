@@ -1,16 +1,14 @@
 ---
+
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
 import AppShell from "@/components/layout/AppShell";
-import LinkCards from "@/components/cards/LinkCards";
+
 import Button from "@/components/ui/Button";
-import LinksTable from "@/components/tables/LinksTable";
 
-
-import { getLinks } from "@/services/links";
-
-const links = await getLinks();
+import LinksPage from "@/components/pages/LinksPage";
 
 const origin = Astro.url.origin;
+
 ---
 
 <DashboardLayout title="Links">
@@ -48,23 +46,10 @@ Manage your short links.
 
 </div>
 
-<div class="hidden lg:block">
-
-<LinksTable
-client:load
-links={links}
-origin={origin}
-/>
-
-</div>
-
-<div class="lg:hidden">
-  <LinkCards
+<LinksPage
     client:load
-    links={links}
     origin={origin}
-  />
-</div>
+/>
 
 </div>
 

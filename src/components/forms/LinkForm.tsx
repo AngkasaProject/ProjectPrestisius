@@ -4,6 +4,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select";
 import { Shuffle } from "lucide-react";
+import { getAccessToken } from "@/lib/auth/client";
 
 type SlugStatus = "idle" | "checking" | "available" | "taken";
 
@@ -134,6 +135,7 @@ export default function LinkForm({
     setSaving(true);
 
     try {
+      const token = await getAccessToken();
       const res = await fetch(
         mode === "create" ? "/api/links" : `/api/links/${initialData?.id}`,
         {
@@ -141,6 +143,7 @@ export default function LinkForm({
 
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
 
           body: JSON.stringify({

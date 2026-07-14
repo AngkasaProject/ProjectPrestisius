@@ -1,10 +1,11 @@
 import { supabase } from "@/lib/supabase/server";
 import type { Link } from "@/types/link";
 
-export async function getLinks(): Promise<Link[]> {
+export async function getLinks(userId: string): Promise<Link[]> {
   const { data, error } = await supabase
     .from("links")
     .select("*")
+    .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -13,6 +14,7 @@ export async function getLinks(): Promise<Link[]> {
 }
 
 type CreateLinkPayload = {
+  user_id: string;
   slug: string;
   destination_url: string;
   mode: "direct" | "flow";

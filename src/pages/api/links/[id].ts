@@ -34,7 +34,7 @@ export const PATCH: APIRoute = async ({ params, request }) => {
 
     const body = await request.json();
 
-    if (typeof body.status === "boolean") {
+    if (Object.keys(body).length === 1 && typeof body.status === "boolean") {
       const updated = await updateLinkStatus(id, body.status);
 
       return Response.json(updated);

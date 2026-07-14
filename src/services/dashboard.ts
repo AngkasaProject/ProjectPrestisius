@@ -9,10 +9,13 @@ export type DashboardStats = {
   recentLinks: Link[];
 };
 
-export async function getDashboardStats(): Promise<DashboardStats> {
+export async function getDashboardStats(
+  userId: string,
+): Promise<DashboardStats> {
   const { data: links, error } = await supabase
     .from("links")
     .select("*")
+    .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
   if (error) {
