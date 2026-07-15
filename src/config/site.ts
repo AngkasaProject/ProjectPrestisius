@@ -1,13 +1,7 @@
 export const site = {
-  name: "Angkasa Project",
-  title: "Angkasa Project | Smart Link Platform",
+  title: "TRIM IT | Modern URL Shortener & Bio Pages",
   description:
-    "Create short links, bio pages, QR codes, and track analytics in one platform.",
-  url: "https://angkasa.id", // ganti nanti
-  locale: "en_US",
-  themeColor: "#18181b",
-
-  social: {
-    twitter: "@angkasaproject",
-  },
+    "Create short links, build beautiful bio pages, and manage every important link from one platform.",
+  url: "https://trimit.my.id",
+  themeColor: "#84CC16",
 };

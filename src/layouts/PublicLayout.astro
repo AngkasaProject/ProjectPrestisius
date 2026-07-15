@@ -1,15 +1,28 @@
 ---
 import "@/styles/global.css";
 import { site } from "@/config/site";
+
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  noindex?: boolean;
 }
 
 const {
   title = site.title,
   description = site.description,
+  image = "/brand/logo.png",
+  noindex = false,
 } = Astro.props;
+
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : Astro.url.href;
+
+const imageUrl = Astro.site
+  ? new URL(image, Astro.site).toString()
+  : image;
 ---
 
 <!doctype html>
@@ -25,19 +38,59 @@ const {
 
     <title>{title}</title>
 
-<meta name="description" content={description} />
+    <!-- Basic SEO -->
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="TRIM IT,url shortener,short url,bio page,link in bio,analytics,custom links"
+    />
+    <meta name="author" content="Angkasa Project" />
+    <meta name="generator" content="TRIM IT" />
+    <meta name="theme-color" content={site.themeColor} />
 
-<meta name="theme-color" content={site.themeColor} />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex,nofollow" />
+      ) : (
+        <meta name="robots" content="index,follow" />
+      )
+    }
 
-<meta name="robots" content="index,follow" />
+    <link rel="canonical" href={canonical} />
 
-<link rel="icon" href="/favicon.ico" />
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
 
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link
+      rel="apple-touch-icon"
+      href="/brand/logo-kotak.png"
+    />
 
-<link rel="manifest" href="/site.webmanifest" />
+    <link rel="manifest" href="/site.webmanifest" />
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TRIM IT" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:title" content={title} />
+    <meta
+      property="og:description"
+      content={description}
+    />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
 
+    <!-- Twitter -->
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+    <meta name="twitter:title" content={title} />
+    <meta
+      name="twitter:description"
+      content={description}
+    />
+    <meta name="twitter:image" content={imageUrl} />
   </head>
 
   <body class="min-h-screen bg-linear-to-br from-zinc-100 via-white to-zinc-100 text-zinc-900 antialiased">

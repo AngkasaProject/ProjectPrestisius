@@ -1,14 +1,25 @@
 ---
 import PublicLayout from "@/layouts/PublicLayout.astro";
+import AuthBackground from "@/components/auth/AuthBackground.astro";
 import LoginForm from "@/components/auth/LoginForm";
 ---
 
 <PublicLayout title="Login">
-  <main class="flex min-h-screen items-center justify-center px-4 py-10">
-    <div class="w-full max-w-md rounded-3xl border border-zinc-200 bg-white p-10 shadow-xl">
+
+  <main class="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10">
+
+    <AuthBackground />
+
+    <div class="relative z-10 w-full max-w-md rounded-3xl border border-zinc-200/70 bg-white/80 p-10 shadow-2xl backdrop-blur-xl">
+
       <!-- Logo -->
-      <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-900 text-2xl font-bold text-white">
-        AP
+      <div class="flex justify-center">
+        <img
+          src="/brand/logo-kotak.png
+          "
+          alt="TRIM IT"
+          class="h-24 w-auto"
+        />
       </div>
 
       <h1 class="mt-8 text-center text-3xl font-bold">
@@ -19,7 +30,7 @@ import LoginForm from "@/components/auth/LoginForm";
         Sign in to continue managing your links.
       </p>
 
-     <LoginForm client:load />
+      <LoginForm client:load />
 
       <div class="mt-8 border-t border-zinc-200 pt-6 text-center text-sm text-zinc-500">
         Don't have an account?
@@ -31,8 +42,9 @@ import LoginForm from "@/components/auth/LoginForm";
           Register
         </a>
       </div>
+
     </div>
+
   </main>
 
-  
 </PublicLayout>
