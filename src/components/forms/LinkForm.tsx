@@ -5,6 +5,7 @@ import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select";
 import { Shuffle } from "lucide-react";
 import { getAccessToken } from "@/lib/auth/client";
+import OpenGraphCard from "./opengraph/OpenGraphCard";
 
 type SlugStatus = "idle" | "checking" | "available" | "taken";
 
@@ -48,6 +49,12 @@ export default function LinkForm({
   mode = "create",
   initialData,
 }: Props) {
+  const [ogTitle, setOgTitle] = useState("");
+
+  const [ogDescription, setOgDescription] = useState("");
+
+  const [ogImage, setOgImage] = useState<File | null>(null);
+  const [ogMode, setOgMode] = useState<"destination" | "custom">("destination");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
   const [generating, setGenerating] = useState(false);
   const [destination, setDestination] = useState(
@@ -245,6 +252,17 @@ export default function LinkForm({
 
           <option value="flow">Flow</option>
         </Select>
+
+        <OpenGraphCard
+          value={ogMode}
+          onChange={setOgMode}
+          title={ogTitle}
+          description={ogDescription}
+          image={ogImage}
+          onTitleChange={setOgTitle}
+          onDescriptionChange={setOgDescription}
+          onImageChange={setOgImage}
+        />
 
         <div>
           <p className="mb-2 text-sm font-medium">Preview</p>
