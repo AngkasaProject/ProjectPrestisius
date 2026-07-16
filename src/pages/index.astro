@@ -1,20 +1,17 @@
 ---
 import PublicLayout from "@/layouts/PublicLayout.astro";
 
-import PublicNavbar from "@/components/layout/PublicNavbar";
-
 import Hero from "@/components/home/Hero";
 import PrivateBetaModal from "@/components/home/PrivateBetaModal";
 ---
 
-<PublicLayout title="TRIM IT | By Angkasa Project">
-
-  <PublicNavbar client:load />
-
-  <main class="relative min-h-screen overflow-hidden">
+<PublicLayout
+  title="TRIMIT | By Angkasa Project"
+  description="Platform manajemen tautan modern untuk membuat short link, custom Open Graph, dan analitik dalam satu tempat."
+>
+  <main class="relative overflow-hidden">
     <Hero client:load />
   </main>
 
   <PrivateBetaModal client:load />
-
 </PublicLayout>

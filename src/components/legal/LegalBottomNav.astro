@@ -1,0 +1,71 @@
+---
+import {
+  Home,
+  Shield,
+  FileText,
+  TriangleAlert,
+} from "lucide-react";
+
+interface Props {
+  current: "home" | "privacy" | "terms" | "disclaimer";
+}
+
+const { current } = Astro.props;
+
+const items = [
+  {
+    key: "home",
+    label: "Home",
+    href: "/",
+    icon: Home,
+  },
+  {
+    key: "privacy",
+    label: "Privacy",
+    href: "/legal/privacy",
+    icon: Shield,
+  },
+  {
+    key: "terms",
+    label: "Terms",
+    href: "/legal/terms",
+    icon: FileText,
+  },
+  {
+    key: "disclaimer",
+    label: "Disclaimer",
+    href: "/legal/disclaimer",
+    icon: TriangleAlert,
+  },
+];
+---
+
+<div class="fixed inset-x-0 bottom-6 z-50 flex justify-center px-6">
+
+  <nav
+    class="flex items-center gap-2 rounded-2xl border border-zinc-200/80 bg-white/90 p-2 shadow-xl backdrop-blur-xl"
+  >
+    {
+      items.map((item) => {
+        const Icon = item.icon;
+
+        return (
+          <a
+            href={item.href}
+            class:list={[
+              "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200",
+              current === item.key
+                ? "bg-lime-500 text-white shadow"
+                : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900",
+            ]}
+          >
+            <Icon size={16} />
+
+            <span>{item.label}</span>
+          </a>
+        );
+      })
+    }
+  </nav>
+
+</div>

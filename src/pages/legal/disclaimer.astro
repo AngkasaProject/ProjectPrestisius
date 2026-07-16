@@ -1,0 +1,135 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import LegalBottomNav from "@/components/legal/LegalBottomNav.astro";
+
+const lastUpdated = "16 Juli 2026";
+---
+
+<PublicLayout
+  title="Disclaimer"
+  description="Disclaimer penggunaan layanan TRIMIT."
+>
+
+<section class="bg-zinc-50 py-16 pt-27">
+  <div class="mx-auto max-w-5xl px-6">
+
+    <div class="mb-10">
+      <span class="rounded-full border border-lime-200 bg-lime-50 px-3 py-1 text-sm font-medium text-lime-700">
+        Dokumen Legal
+      </span>
+
+      <h1 class="mt-5 text-4xl font-bold tracking-tight text-zinc-900">
+        Disclaimer
+      </h1>
+
+      <p class="mt-4 max-w-2xl text-lg leading-8 text-zinc-600">
+        Dokumen ini menjelaskan batas tanggung jawab TRIMIT dalam penyediaan
+        layanan serta penggunaan platform oleh pengguna.
+      </p>
+
+      <p class="mt-4 text-sm text-zinc-500">
+        Terakhir diperbarui: {lastUpdated}
+      </p>
+    </div>
+
+    <div class="rounded-3xl border border-zinc-200 bg-white shadow-sm">
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          1. Informasi Umum
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Seluruh informasi dan layanan yang tersedia di TRIMIT disediakan
+          sebagaimana adanya (<em>as is</em>) tanpa jaminan tersurat maupun
+          tersirat mengenai kelengkapan, keakuratan, atau kesesuaian untuk
+          tujuan tertentu.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          2. Tanggung Jawab Pengguna
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Pengguna bertanggung jawab penuh atas seluruh tautan, konten,
+          metadata, gambar, maupun informasi lain yang dibuat atau dibagikan
+          melalui layanan TRIMIT.
+        </p>
+
+        <p class="mt-4 leading-8 text-zinc-600">
+          Pengguna wajib memastikan bahwa seluruh konten yang dipublikasikan
+          tidak melanggar hukum, hak cipta, maupun hak pihak ketiga.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          3. Tautan Pihak Ketiga
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          TRIMIT menyediakan layanan pengalihan menuju situs pihak ketiga.
+          Kami tidak memiliki kendali atas isi, keamanan, maupun kebijakan
+          yang diterapkan oleh situs tujuan tersebut.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          4. Ketersediaan Layanan
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Kami berupaya menjaga layanan tetap tersedia, namun tidak menjamin
+          bahwa layanan akan selalu dapat diakses tanpa gangguan,
+          pemeliharaan, atau kendala teknis lainnya.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          5. Batasan Tanggung Jawab
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          TRIMIT tidak bertanggung jawab atas kerugian langsung maupun tidak
+          langsung yang timbul akibat penggunaan layanan, termasuk kehilangan
+          data, gangguan operasional, penyalahgunaan tautan, maupun kerugian
+          finansial yang disebabkan oleh pihak ketiga.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          6. Perubahan Disclaimer
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Dokumen Disclaimer ini dapat diperbarui sewaktu-waktu tanpa
+          pemberitahuan sebelumnya. Versi terbaru akan selalu tersedia pada
+          halaman ini.
+        </p>
+      </section>
+
+      <section class="p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          7. Hubungi Kami
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Apabila Anda memiliki pertanyaan mengenai Disclaimer ini, silakan
+          menghubungi kami melalui informasi kontak resmi yang tersedia di
+          dalam layanan TRIMIT.
+        </p>
+      </section>
+
+    </div>
+
+  </div>
+</section>
+
+<LegalBottomNav current="disclaimer" />
+
+</PublicLayout>

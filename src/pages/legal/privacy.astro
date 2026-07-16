@@ -1,0 +1,154 @@
+---
+import PublicLayout from "@/layouts/PublicLayout.astro";
+import LegalBottomNav from "@/components/legal/LegalBottomNav.astro";
+
+const lastUpdated = "16 Juli 2026";
+---
+
+<PublicLayout
+  title="Kebijakan Privasi"
+  description="Kebijakan Privasi TRIMIT."
+>
+
+<section class="bg-zinc-50 py-16 pt-27">
+  <div class="mx-auto max-w-5xl px-6">
+
+    <div class="mb-10">
+      <span class="rounded-full border border-lime-200 bg-lime-50 px-3 py-1 text-sm font-medium text-lime-700">
+        Dokumen Legal
+      </span>
+
+      <h1 class="mt-5 text-4xl font-bold tracking-tight text-zinc-900">
+        Kebijakan Privasi
+      </h1>
+
+      <p class="mt-4 max-w-2xl text-lg leading-8 text-zinc-600">
+        Dokumen ini menjelaskan bagaimana TRIMIT mengumpulkan, menggunakan,
+        menyimpan, dan melindungi informasi pengguna.
+      </p>
+
+      <p class="mt-4 text-sm text-zinc-500">
+        Terakhir diperbarui: {lastUpdated}
+      </p>
+    </div>
+
+    <div class="rounded-3xl border border-zinc-200 bg-white shadow-sm">
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          1. Pendahuluan
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          TRIMIT menghargai privasi setiap pengguna. Dokumen ini menjelaskan
+          jenis informasi yang kami kumpulkan, tujuan penggunaannya, serta
+          langkah-langkah yang kami lakukan untuk menjaga keamanan data Anda.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          2. Informasi yang Kami Kumpulkan
+        </h2>
+
+        <ul class="list-disc space-y-3 pl-6 leading-8 text-zinc-600">
+          <li>Informasi akun seperti nama, email, dan identitas pengguna.</li>
+          <li>Data tautan yang dibuat melalui layanan TRIMIT.</li>
+          <li>Metadata Open Graph yang ditambahkan pengguna.</li>
+          <li>Gambar yang diunggah ke Media Library.</li>
+          <li>Data penggunaan untuk meningkatkan kualitas layanan.</li>
+        </ul>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          3. Penggunaan Informasi
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Informasi yang dikumpulkan digunakan untuk menyediakan layanan,
+          meningkatkan performa aplikasi, menjaga keamanan sistem, serta
+          memberikan pengalaman penggunaan yang lebih baik.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          4. Penyimpanan Data
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Seluruh data disimpan menggunakan infrastruktur yang kami anggap
+          aman dan hanya dapat diakses oleh pihak yang berwenang untuk
+          keperluan operasional layanan.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          5. Berbagi Informasi
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          TRIMIT tidak menjual maupun memperdagangkan data pribadi pengguna.
+          Informasi hanya akan dibagikan apabila diwajibkan oleh hukum atau
+          diperlukan untuk menjalankan layanan.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          6. Keamanan Data
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Kami menerapkan berbagai langkah teknis dan administratif untuk
+          membantu melindungi data pengguna dari akses yang tidak sah,
+          perubahan, pengungkapan, maupun penghapusan yang tidak diinginkan.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          7. Hak Pengguna
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Pengguna dapat memperbarui, mengubah, maupun menghapus informasi
+          tertentu yang tersimpan pada akun sesuai dengan fitur yang tersedia
+          di dalam layanan.
+        </p>
+      </section>
+
+      <section class="border-b border-zinc-100 p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          8. Perubahan Kebijakan Privasi
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Kebijakan Privasi ini dapat diperbarui sewaktu-waktu. Setiap
+          perubahan akan dipublikasikan melalui halaman ini dan mulai berlaku
+          sejak tanggal pembaruan.
+        </p>
+      </section>
+
+      <section class="p-8">
+        <h2 class="mb-4 text-2xl font-semibold">
+          9. Hubungi Kami
+        </h2>
+
+        <p class="leading-8 text-zinc-600">
+          Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi ini,
+          silakan menghubungi kami melalui email atau informasi kontak yang
+          tersedia pada layanan TRIMIT.
+        </p>
+      </section>
+
+    </div>
+
+  </div>
+</section>
+
+<LegalBottomNav current="privacy" />
+
+</PublicLayout>
