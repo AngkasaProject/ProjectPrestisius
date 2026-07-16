@@ -3,25 +3,37 @@ import OpenGraphPreview from "./OpenGraphPreview";
 
 type Props = {
   value: "destination" | "custom";
+
   title: string;
   description: string;
-  image: File | null;
+
+  imageFile: File | null;
+  imageUrl: string | null;
 
   onChange: (value: "destination" | "custom") => void;
+
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
-  onImageChange: (file: File | null) => void;
+
+  onImageFileChange: (file: File | null) => void;
+  onImageUrlChange: (url: string | null) => void;
 };
 
 export default function OpenGraphCard({
   value,
   title,
   description,
-  image,
+
+  imageFile,
+  imageUrl,
+
   onChange,
+
   onTitleChange,
   onDescriptionChange,
-  onImageChange,
+
+  onImageFileChange,
+  onImageUrlChange,
 }: Props) {
   return (
     <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6">
@@ -75,17 +87,20 @@ export default function OpenGraphCard({
               <OpenGraphPreview
                 title={title}
                 description={description}
-                image={image}
+                imageFile={imageFile}
+                imageUrl={imageUrl}
               />
             </div>
 
             <OpenGraphFields
               title={title}
               description={description}
-              image={image}
+              imageFile={imageFile}
+              imageUrl={imageUrl}
               onTitleChange={onTitleChange}
               onDescriptionChange={onDescriptionChange}
-              onImageChange={onImageChange}
+              onImageFileChange={onImageFileChange}
+              onImageUrlChange={onImageUrlChange}
             />
           </div>
         )}

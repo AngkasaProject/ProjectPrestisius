@@ -1,23 +1,37 @@
-import { ImagePlus } from "lucide-react";
+import { useState } from "react";
+import { ImagePlus, Images } from "lucide-react";
+
+import ImageLibrary from "@/components/image-library/ImageLibrary";
 
 type Props = {
   title: string;
   description: string;
-  image: File | null;
+
+  imageFile: File | null;
+  imageUrl: string | null;
 
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
-  onImageChange: (file: File | null) => void;
+
+  onImageFileChange: (file: File | null) => void;
+  onImageUrlChange: (url: string | null) => void;
 };
 
 export default function OpenGraphFields({
   title,
   description,
-  image,
+
+  imageFile,
+  imageUrl,
+
   onTitleChange,
   onDescriptionChange,
-  onImageChange,
+
+  onImageFileChange,
+  onImageUrlChange,
 }: Props) {
+  const [showLibrary, setShowLibrary] = useState(false);
+
   return (
     <div className="space-y-5">
       <div>
@@ -59,21 +73,67 @@ export default function OpenGraphFields({
             <p className="font-medium">Upload Image</p>
 
             <p className="mt-1 text-sm text-zinc-500">
-              PNG, JPG, WEBP (Max 5 MB)
+              PNG, JPG, WEBP (Max 1 MB)
             </p>
 
-            {image && (
-              <p className="mt-2 text-xs text-lime-600">{image.name}</p>
+            {imageFile && (
+              <p className="mt-2 text-xs font-medium text-lime-600">
+                {imageFile.name}
+              </p>
             )}
           </div>
+          {imageUrl && !imageFile && (
+            <>
+              <p className="mt-2 text-xs font-medium text-lime-600">
+                Image selected from Media Library
+              </p>
 
+              <img
+                src={imageUrl}
+                alt="Selected"
+                className="mx-auto mt-3 h-20 w-20 rounded-lg border border-zinc-200 object-cover"
+              />
+            </>
+          )}
           <input
             hidden
             type="file"
             accept="image/png,image/jpeg,image/webp"
-            onChange={(e) => onImageChange(e.target.files?.[0] ?? null)}
+            onChange={(e) => {
+              const file = e.target.files?.[0] ?? null;
+
+              onImageFileChange(file);
+
+              if (file) {
+                onImageUrlChange(null);
+              }
+            }}
           />
         </label>
+
+        <button
+          type="button"
+          onClick={() => setShowLibrary((prev) => !prev)}
+          className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 font-medium transition hover:border-lime-500 hover:text-lime-600"
+        >
+          <Images size={18} />
+
+          {showLibrary ? "Hide Media Library" : "Choose From Media Library"}
+        </button>
+
+        {showLibrary && (
+          <div className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+            <ImageLibrary
+              value={imageUrl}
+              onSelect={(image) => {
+                onImageFileChange(null);
+                onImageUrlChange(image.url);
+
+                setShowLibrary(false);
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

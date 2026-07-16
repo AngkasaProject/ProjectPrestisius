@@ -34,6 +34,7 @@ export const PATCH: APIRoute = async ({ params, request }) => {
 
     const body = await request.json();
 
+    // Toggle status
     if (Object.keys(body).length === 1 && typeof body.status === "boolean") {
       const updated = await updateLinkStatus(id, body.status);
 
@@ -41,6 +42,10 @@ export const PATCH: APIRoute = async ({ params, request }) => {
     }
 
     const current = await getLinkById(id);
+
+    if (!current) {
+      return Response.json({ message: "Link not found" }, { status: 404 });
+    }
 
     if (body.slug !== current.slug) {
       const available = await checkSlug(body.slug);
@@ -62,10 +67,17 @@ export const PATCH: APIRoute = async ({ params, request }) => {
       destination_url: body.destination_url,
       mode: body.mode,
       status: body.status,
+
+      og_mode: body.og_mode ?? "destination",
+      og_title: body.og_title ?? null,
+      og_description: body.og_description ?? null,
+      og_image_url: body.og_image_url ?? null,
     });
 
     return Response.json(updated);
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return Response.json({ message: "Failed to update" }, { status: 500 });
   }
 };
@@ -83,7 +95,9 @@ export const DELETE: APIRoute = async ({ params }) => {
     return Response.json({
       success: true,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return Response.json({ message: "Failed to delete" }, { status: 500 });
   }
 };

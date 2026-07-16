@@ -16,13 +16,14 @@ const {
   noindex = false,
 } = Astro.props;
 
-const canonical = Astro.site
-  ? new URL(Astro.url.pathname, Astro.site).toString()
-  : Astro.url.href;
+const canonical = new URL(
+  Astro.url.pathname,
+  site.url,
+).toString();
 
-const imageUrl = Astro.site
-  ? new URL(image, Astro.site).toString()
-  : image;
+const imageUrl = image.startsWith("http")
+  ? image
+  : new URL(image, site.url).toString();
 ---
 
 <!doctype html>
@@ -79,6 +80,9 @@ const imageUrl = Astro.site
     />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
 
     <!-- Twitter -->
     <meta

@@ -1,11 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { Link } from "@/types/link";
-import Button from "@/components/ui/Button";
-import Input from "@/components/forms/Input";
-import Select from "@/components/forms/Select";
-import { Shuffle } from "lucide-react";
-import { getAccessToken } from "@/lib/auth/client";
+import { createLink } from "@/services/links/create";
+import { updateLink } from "@/services/links/update";
+import { validateLink } from "@/services/links/validation";
 import OpenGraphCard from "./opengraph/OpenGraphCard";
+
+import LinkBasicSection from "./sections/LinkBasicSection";
+import LinkModeSection from "./sections/LinkModeSection";
+import LinkPreviewSection from "./sections/LinkPreviewSection";
+import LinkActionSection from "./sections/LinkActionSection";
+import { slugify } from "@/services/slug/utils";
+
+import { useSlug } from "@/hooks/useSlug";
 
 type SlugStatus = "idle" | "checking" | "available" | "taken";
 
@@ -14,25 +20,6 @@ type Props = {
   mode?: "create" | "edit";
   initialData?: Link;
 };
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9.-]/g, "")
-    .replace(/-+/g, "-")
-    .slice(0, 50);
-}
-
-function generateRandomSlug(length = 6) {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
-
-  return Array.from(
-    { length },
-    () => chars[Math.floor(Math.random() * chars.length)],
-  ).join("");
-}
 
 function isValidUrl(value: string) {
   try {
@@ -49,14 +36,18 @@ export default function LinkForm({
   mode = "create",
   initialData,
 }: Props) {
-  const [ogTitle, setOgTitle] = useState("");
+  const [ogTitle, setOgTitle] = useState(initialData?.og_title ?? "");
+  const [ogDescription, setOgDescription] = useState(
+    initialData?.og_description ?? "",
+  );
+  const [ogImageUrl, setOgImageUrl] = useState<string | null>(
+    initialData?.og_image_url ?? null,
+  );
+  const [ogImageFile, setOgImageFile] = useState<File | null>(null);
+  const [ogMode, setOgMode] = useState<"destination" | "custom">(
+    initialData?.og_mode ?? "destination",
+  );
 
-  const [ogDescription, setOgDescription] = useState("");
-
-  const [ogImage, setOgImage] = useState<File | null>(null);
-  const [ogMode, setOgMode] = useState<"destination" | "custom">("destination");
-  const [slug, setSlug] = useState(initialData?.slug ?? "");
-  const [generating, setGenerating] = useState(false);
   const [destination, setDestination] = useState(
     initialData?.destination_url ?? "",
   );
@@ -67,115 +58,73 @@ export default function LinkForm({
 
   const [status] = useState(initialData?.status ?? true);
 
-  const [slugStatus, setSlugStatus] = useState<SlugStatus>("idle");
-
   const [saving, setSaving] = useState(false);
+
+  const { slug, setSlug, slugStatus, generating, generate } = useSlug({
+    initialSlug: initialData?.slug,
+    mode,
+  });
 
   const preview = useMemo(() => {
     if (!origin || !slug) return "";
 
     return `${origin}/${slug}`;
   }, [origin, slug]);
-
-  useEffect(() => {
-    if (mode === "edit" && initialData && slug === initialData.slug) {
-      setSlugStatus("available");
-      return;
-    }
-
-    if (!slug) {
-      setSlugStatus("idle");
-      return;
-    }
-
-    const timeout = setTimeout(async () => {
-      setSlugStatus("checking");
-
-      try {
-        const res = await fetch(
-          `/api/links/check-slug?slug=${encodeURIComponent(slug)}`,
-        );
-
-        const json = await res.json();
-
-        setSlugStatus(json.available ? "available" : "taken");
-      } catch {
-        setSlugStatus("taken");
-      }
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [slug]);
-  async function handleGenerate() {
-    setGenerating(true);
-    setSlugStatus("checking");
-
-    while (true) {
-      const random = generateRandomSlug();
-
-      try {
-        const res = await fetch(`/api/links/check-slug?slug=${random}`);
-
-        const json = await res.json();
-
-        if (json.available) {
-          setSlug(random);
-          setSlugStatus("available");
-          break;
-        }
-      } catch {
-        setSlugStatus("idle");
-        break;
-      }
-    }
-
-    setGenerating(false);
-  }
-
   async function handleSave() {
     if (saving) return;
 
-    if (slugStatus !== "available") return;
+    const validation = validateLink({
+      slug,
+      destination,
+      slugStatus,
+    });
 
-    if (!isValidUrl(destination)) return;
+    if (!validation.valid) {
+      alert(validation.message);
+      return;
+    }
 
     setSaving(true);
 
     try {
-      const token = await getAccessToken();
-      const res = await fetch(
-        mode === "create" ? "/api/links" : `/api/links/${initialData?.id}`,
-        {
-          method: mode === "create" ? "POST" : "PATCH",
+      if (mode === "create") {
+        await createLink({
+          slug,
+          destination,
+          mode: modeValue,
+          status,
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          ogMode,
+          ogTitle,
+          ogDescription,
 
-          body: JSON.stringify({
-            slug,
-            destination_url: destination,
-            mode: modeValue,
-            status,
-          }),
-        },
-      );
+          ogImage: ogImageFile,
+          ogImageUrl,
+        });
+      } else {
+        await updateLink({
+          id: initialData!.id,
 
-      if (!res.ok) {
-        const json = await res.json();
+          slug,
+          destination,
+          mode: modeValue,
+          status,
 
-        alert(json.message ?? "Failed to create link.");
+          ogMode,
+          ogTitle,
+          ogDescription,
 
-        setSaving(false);
+          ogImage: ogImageFile,
+          ogImageUrl,
 
-        return;
+          currentOgImageUrl: initialData?.og_image_url ?? null,
+        });
       }
 
       location.href = "/admin/links";
-    } catch {
-      alert("Network error.");
-
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
       setSaving(false);
     }
   }
@@ -189,117 +138,48 @@ export default function LinkForm({
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
       <div className="space-y-6">
-        <Input
-          label="Short Link"
-          placeholder="google"
-          value={slug}
-          onChange={(e) => setSlug(slugify(e.target.value))}
-          rightElement={
-            <button
-              type="button"
-              onClick={handleGenerate}
-              title="Generate random slug"
-              className="
-        rounded-lg
-        p-2
-        text-zinc-500
-        transition
-        hover:bg-zinc-100
-        hover:text-zinc-900
-        active:scale-95
-      "
-            >
-              <Shuffle size={18} className={generating ? "animate-spin" : ""} />
-            </button>
-          }
+        <LinkBasicSection
+          slug={slug}
+          destination={destination}
+          generating={generating}
+          slugStatus={slugStatus}
+          onSlugChange={(value) => setSlug(slugify(value))}
+          onDestinationChange={setDestination}
+          onGenerate={generate}
         />
-
-        <div className="text-sm">
-          {slugStatus === "idle" && (
-            <p className="text-zinc-400">Enter your custom short link.</p>
-          )}
-
-          {slugStatus === "checking" && (
-            <p className="text-amber-600">Checking...</p>
-          )}
-
-          {slugStatus === "available" && (
-            <p className="text-green-600">✓ Available</p>
-          )}
-
-          {slugStatus === "taken" && (
-            <p className="text-red-600">✕ Already taken</p>
-          )}
-        </div>
-
-        <Input
-          label="Destination URL"
-          placeholder="https://google.com"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-        />
-
         {destination && !isValidUrl(destination) && (
           <p className="text-sm text-red-600">Invalid URL.</p>
         )}
 
-        <Select
-          label="Mode"
-          value={modeValue}
-          onChange={(e) => setModeValue(e.target.value as "direct" | "flow")}
-        >
-          <option value="direct">Direct</option>
-
-          <option value="flow">Flow</option>
-        </Select>
+        <LinkModeSection value={modeValue} onChange={setModeValue} />
 
         <OpenGraphCard
           value={ogMode}
           onChange={setOgMode}
           title={ogTitle}
           description={ogDescription}
-          image={ogImage}
+          imageFile={ogImageFile}
+          imageUrl={ogImageUrl}
           onTitleChange={setOgTitle}
           onDescriptionChange={setOgDescription}
-          onImageChange={setOgImage}
+          onImageFileChange={setOgImageFile}
+          onImageUrlChange={setOgImageUrl}
         />
 
-        <div>
-          <p className="mb-2 text-sm font-medium">Preview</p>
+        <LinkPreviewSection preview={preview} onCopy={copyPreview} />
 
-          <div className="flex flex-col gap-3 rounded-xl bg-zinc-100 p-4 md:flex-row md:items-center md:justify-between">
-            <span className="break-all text-sm text-zinc-700">
-              {preview || "https://domain.com/your-link"}
-            </span>
-
-            <Button type="button" onClick={copyPreview}>
-              Copy
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-3">
-          <Button type="button" variant="danger" onClick={() => history.back()}>
-            Cancel
-          </Button>
-
-          <Button
-            type="button"
-            disabled={
-              saving ||
-              slugStatus !== "available" ||
-              !destination ||
-              !isValidUrl(destination)
-            }
-            onClick={handleSave}
-          >
-            {saving
-              ? "Saving..."
-              : mode === "create"
-                ? "Create Link"
-                : "Save Changes"}
-          </Button>
-        </div>
+        <LinkActionSection
+          saving={saving}
+          mode={mode}
+          disabled={
+            saving ||
+            slugStatus !== "available" ||
+            !destination ||
+            !isValidUrl(destination)
+          }
+          onCancel={() => history.back()}
+          onSave={handleSave}
+        />
       </div>
     </div>
   );

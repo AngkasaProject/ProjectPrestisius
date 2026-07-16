@@ -1,40 +1,65 @@
-import { supabase } from "@/lib/supabase/client";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { v4 as uuid } from "uuid";
 
-export async function uploadOgImage(file: File, userId: string) {
-  const extension = file.name.split(".").pop();
+export type UploadFolder = "custom-og" | "avatars" | "bio";
 
-  const path = `${userId}/${uuid()}.${extension}`;
+const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
 
-  const { error } = await supabase.storage
-    .from("custom-og")
+const MAX_SIZE = 1 * 1024 * 1024;
+
+export async function uploadImage(
+  folder: UploadFolder,
+  file: File,
+  userId: string,
+) {
+  if (!ALLOWED_TYPES.includes(file.type as (typeof ALLOWED_TYPES)[number])) {
+    throw new Error("Unsupported image format.");
+  }
+
+  if (file.size > MAX_SIZE) {
+    throw new Error("Maximum image size is 5 MB.");
+  }
+
+  const extension = file.name.split(".").pop()?.toLowerCase() ?? "webp";
+
+  const path = `${folder}/${userId}/${uuid()}.${extension}`;
+
+  const { error } = await supabaseAdmin.storage
+    .from("assets")
     .upload(path, file, {
       cacheControl: "3600",
       upsert: false,
     });
 
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 
-  const { data } = supabase.storage.from("custom-og").getPublicUrl(path);
+  const { data } = supabaseAdmin.storage.from("assets").getPublicUrl(path);
 
   return {
     path,
     url: data.publicUrl,
   };
 }
-export async function deleteOgImage(path: string) {
-  const { error } = await supabase.storage.from("custom-og").remove([path]);
 
-  if (error) throw error;
+export async function deleteImage(path: string) {
+  const { error } = await supabaseAdmin.storage.from("assets").remove([path]);
+
+  if (error) {
+    throw error;
+  }
 }
-export async function replaceOgImage(
+
+export async function replaceImage(
+  folder: UploadFolder,
   oldPath: string | null,
   file: File,
   userId: string,
 ) {
   if (oldPath) {
-    await deleteOgImage(oldPath);
+    await deleteImage(oldPath);
   }
 
-  return uploadOgImage(file, userId);
+  return uploadImage(folder, file, userId);
 }

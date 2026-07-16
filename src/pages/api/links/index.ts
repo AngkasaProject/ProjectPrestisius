@@ -48,7 +48,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    console.log("USER:", user.id);
     if (!body.slug) {
       return Response.json(
         {
@@ -90,6 +89,11 @@ export const POST: APIRoute = async ({ request }) => {
       destination_url: body.destination_url,
       mode: body.mode ?? "direct",
       status: true,
+
+      og_mode: body.og_mode ?? "destination",
+      og_title: body.og_title ?? null,
+      og_description: body.og_description ?? null,
+      og_image_url: body.og_image_url ?? null,
     });
 
     return Response.json(link, {

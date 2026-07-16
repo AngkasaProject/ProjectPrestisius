@@ -1,11 +1,20 @@
 type Props = {
   title: string;
   description: string;
-  image: File | null;
+
+  imageFile: File | null;
+  imageUrl: string | null;
 };
 
-export default function OpenGraphPreview({ title, description, image }: Props) {
-  const imageUrl = image ? URL.createObjectURL(image) : "/brand/logo-kotak.png";
+export default function OpenGraphPreview({
+  title,
+  description,
+  imageFile,
+  imageUrl,
+}: Props) {
+  const previewImage = imageFile
+    ? URL.createObjectURL(imageFile)
+    : (imageUrl ?? "/brand/logo-kotak.png");
 
   return (
     <>
@@ -13,9 +22,9 @@ export default function OpenGraphPreview({ title, description, image }: Props) {
 
       <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
         <img
-          src={imageUrl}
+          src={previewImage}
           alt="Preview"
-          className="aspect-[1.91/1] w-full object-contain bg-zinc-100"
+          className="aspect-[1.91/1] w-full bg-zinc-100 object-contain"
         />
 
         <div className="border-t border-zinc-100 p-4">
