@@ -8,12 +8,13 @@ import {
 const year = new Date().getFullYear();
 ---
 
-<footer class="relative mt-24 overflow-hidden bg-zinc-950 text-white">
+<footer class="relative mt-24 overflow-hidden border-t border-zinc-200 bg-linear-to-b from-zinc-100 via-white to-zinc-100">
 
-  <!-- Glow -->
-  <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime-400 to-transparent" />
+  <!-- Top Glow -->
+  <div class="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-lime-500/60 to-transparent"></div>
 
-  <div class="absolute inset-x-0 top-0 h-72 bg-radial-[at_top] from-lime-500/10 via-transparent to-transparent"></div>
+  <!-- Background Glow -->
+  <div class="absolute inset-x-0 top-0 h-80 bg-radial-[at_top] from-lime-400/15 via-transparent to-transparent"></div>
 
   <div class="relative mx-auto max-w-7xl px-6 py-20">
 
@@ -22,17 +23,15 @@ const year = new Date().getFullYear();
       <!-- Brand -->
       <div>
 
-        <a href="/" class="inline-flex items-center gap-4">
-
+        <a href="/" class="inline-flex items-center">
           <img
-            src="/brand/logo-putih.png"
+            src="/brand/logo.png"
             alt="TRIMIT"
             class="h-12 w-auto"
           />
-
         </a>
 
-        <p class="mt-8 max-w-sm leading-8 text-zinc-400">
+        <p class="mt-8 max-w-sm leading-8 text-zinc-600">
           Modern Link Management Platform untuk membuat Short Link,
           Bio Link, QR Code, dan Custom Open Graph dalam satu dashboard
           yang cepat, aman, dan mudah digunakan.
@@ -42,7 +41,7 @@ const year = new Date().getFullYear();
 
           <a
             href="tel:+628123456789"
-            class="flex items-center gap-3 text-zinc-300 transition hover:text-lime-400"
+            class="flex items-center gap-3 text-zinc-700 transition hover:text-lime-600"
           >
             <Phone size={18} />
 
@@ -51,7 +50,7 @@ const year = new Date().getFullYear();
 
           <a
             href="mailto:hello@trimit.my.id"
-            class="flex items-center gap-3 text-zinc-300 transition hover:text-lime-400"
+            class="flex items-center gap-3 text-zinc-700 transition hover:text-lime-600"
           >
             <Mail size={18} />
 
@@ -65,25 +64,25 @@ const year = new Date().getFullYear();
       <!-- Features -->
       <div>
 
-        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-white">
+        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-900">
           Features
         </h3>
 
         <nav class="mt-8 space-y-4">
 
-          <a href="#" class="block text-zinc-400 transition hover:text-lime-400">
+          <a href="#" class="block text-zinc-600 transition hover:text-lime-600">
             Short Links
           </a>
 
-          <a href="#" class="block text-zinc-400 transition hover:text-lime-400">
+          <a href="#" class="block text-zinc-600 transition hover:text-lime-600">
             Bio Links
           </a>
 
-          <a href="#" class="block text-zinc-400 transition hover:text-lime-400">
+          <a href="#" class="block text-zinc-600 transition hover:text-lime-600">
             QR Codes
           </a>
 
-          <a href="#" class="block text-zinc-400 transition hover:text-lime-400">
+          <a href="#" class="block text-zinc-600 transition hover:text-lime-600">
             Custom Open Graph
           </a>
 
@@ -94,7 +93,7 @@ const year = new Date().getFullYear();
       <!-- Legal -->
       <div>
 
-        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-white">
+        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-900">
           Legal
         </h3>
 
@@ -102,21 +101,21 @@ const year = new Date().getFullYear();
 
           <a
             href="/legal/privacy"
-            class="block text-zinc-400 transition hover:text-lime-400"
+            class="block text-zinc-600 transition hover:text-lime-600"
           >
             Privacy Policy
           </a>
 
           <a
             href="/legal/terms"
-            class="block text-zinc-400 transition hover:text-lime-400"
+            class="block text-zinc-600 transition hover:text-lime-600"
           >
             Terms of Service
           </a>
 
           <a
             href="/legal/disclaimer"
-            class="block text-zinc-400 transition hover:text-lime-400"
+            class="block text-zinc-600 transition hover:text-lime-600"
           >
             Disclaimer
           </a>
@@ -128,7 +127,7 @@ const year = new Date().getFullYear();
       <!-- Contact -->
       <div>
 
-        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-white">
+        <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-900">
           Contact
         </h3>
 
@@ -137,7 +136,7 @@ const year = new Date().getFullYear();
           <a
             href="mailto:hello@trimit.my.id"
             aria-label="Email"
-            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-900 text-zinc-300 transition-all duration-300 hover:-translate-y-1 hover:bg-lime-500 hover:text-white"
+            class="flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-zinc-700 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-lime-500 hover:bg-lime-500 hover:text-white"
           >
             <Mail size={20} />
           </a>
@@ -145,7 +144,7 @@ const year = new Date().getFullYear();
           <a
             href="tel:+628123456789"
             aria-label="Phone"
-            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-900 text-zinc-300 transition-all duration-300 hover:-translate-y-1 hover:bg-lime-500 hover:text-white"
+            class="flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-zinc-700 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-lime-500 hover:bg-lime-500 hover:text-white"
           >
             <Phone size={20} />
           </a>
@@ -155,12 +154,10 @@ const year = new Date().getFullYear();
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Website"
-            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-900 text-zinc-300 transition-all duration-300 hover:-translate-y-1 hover:bg-lime-500 hover:text-white"
+            class="flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-zinc-700 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-lime-500 hover:bg-lime-500 hover:text-white"
           >
             <Globe size={20} />
           </a>
-
-   
 
         </div>
 
@@ -168,27 +165,20 @@ const year = new Date().getFullYear();
 
     </div>
 
-    <div class="mt-16 border-t border-zinc-800 pt-8">
+    <div class="mt-16 border-t border-zinc-200 pt-8">
 
       <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
 
-        <p class="text-sm text-zinc-500">
-          © {year}
-          <span class="font-semibold text-white">
-            TRIMIT
-          </span>
-          . All rights reserved.
-        </p>
+      <p class="flex flex-wrap items-center gap-1 text-sm text-zinc-500">
+  <span>© {year}</span>
 
-        <div class="flex items-center gap-8 text-xs uppercase tracking-[0.3em] text-zinc-600">
+  <span class="font-semibold text-zinc-900">
+    TRIMIT
+  </span>
 
-          <span>FAST</span>
+  <span>All rights reserved.</span>
+</p>
 
-          <span>SECURE</span>
-
-          <span>RELIABLE</span>
-
-        </div>
 
       </div>
 
