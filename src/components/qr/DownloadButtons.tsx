@@ -1,38 +1,27 @@
 import type { RefObject } from "react";
-import domtoimage from "dom-to-image-more";
 import { toast } from "sonner";
 
+import type { QRCanvasRef } from "./QRCanvas";
+
 interface Props {
-  cardRef: RefObject<HTMLDivElement | null>;
+  qrRef: RefObject<QRCanvasRef | null>;
   filename: string;
 }
 
-export default function DownloadButtons({ cardRef, filename }: Props) {
+export default function DownloadButtons({ qrRef, filename }: Props) {
   async function handleDownloadPNG() {
-    if (!cardRef.current) {
-      toast.error("QR Card not found");
-      return;
-    }
-
     try {
-      const dataUrl = await domtoimage.toPng(cardRef.current, {
-        bgcolor: "#ffffff",
-        quality: 1,
-        scale: 4,
-        cacheBust: true,
-        width: cardRef.current.scrollWidth,
-        height: cardRef.current.scrollHeight,
-      });
+      if (!qrRef.current) {
+        toast.error("QR not ready");
+        return;
+      }
 
-      const link = document.createElement("a");
-      link.download = `${filename}.png`;
-      link.href = dataUrl;
-      link.click();
+      await qrRef.current.download(filename);
 
-      toast.success("PNG downloaded");
+      toast.success("QR downloaded");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to download PNG");
+      toast.error("Failed to download QR");
     }
   }
 

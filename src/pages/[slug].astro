@@ -17,55 +17,44 @@ const { data: link } = await supabase
   .eq("slug", slug)
   .single();
 
-if (!link) {
-  return new Response("404 Not Found", {
-    status: 404,
-  });
+/**
+ * Semua kondisi gagal menggunakan halaman 404
+ */
+if (!link || !link.status) {
+  Astro.response.status = 404;
+
+  return Astro.rewrite("/404");
 }
 
-if (!link.status) {
-  return new Response("Link is inactive", {
-    status: 403,
-  });
-}
-
-const userAgent =
-  Astro.request.headers.get("user-agent") ?? "";
-
-
+const userAgent = Astro.request.headers.get("user-agent") ?? "";
 const crawler = isCrawler(userAgent);
 
-/**
- * User biasa + Direct
- * Redirect instan (tidak render HTML)
- */
-if (!crawler && link.mode === "direct") {
+async function incrementClick() {
   await supabase
     .from("links")
     .update({
       clicks: (link.clicks ?? 0) + 1,
     })
     .eq("id", link.id);
+}
+
+/**
+ * Direct Link
+ */
+if (!crawler && link.mode === "direct") {
+  await incrementClick();
 
   return Astro.redirect(link.destination_url, 302);
 }
 
 /**
- * Flow Page
- * Hitung klik ketika user membuka flow.
- * Crawler tidak dihitung.
+ * Flow Link
  */
 if (!crawler && link.mode === "flow") {
-  await supabase
-    .from("links")
-    .update({
-      clicks: (link.clicks ?? 0) + 1,
-    })
-    .eq("id", link.id);
+  await incrementClick();
 }
 
 const hostname = new URL(link.destination_url).hostname;
-
 const metadata = await resolveMetadata(link);
 ---
 

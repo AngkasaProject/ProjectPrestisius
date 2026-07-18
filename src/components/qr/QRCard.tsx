@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
-import QRCanvas from "./QRCanvas";
+
+import QRCanvas, { type QRCanvasRef } from "./QRCanvas";
 
 interface Props {
   value: string;
@@ -10,15 +11,13 @@ interface Props {
   logo?: string;
 }
 
-const QRCard = forwardRef<HTMLDivElement, Props>(
+const QRCard = forwardRef<QRCanvasRef, Props>(
   ({ value, foreground, background, logo }, ref) => {
     return (
-      <div
-        ref={ref}
-        className="mx-auto w-full max-w-[420px] rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm"
-      >
+      <div className="mx-auto w-full max-w-[420px] rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm">
         <div className="flex justify-center">
           <QRCanvas
+            ref={ref}
             value={value}
             foreground={foreground}
             background={background}

@@ -1,8 +1,10 @@
 import { useRef } from "react";
 
+import QRCard from "./QRCard";
 import QRControls from "./QRControls";
 import DownloadButtons from "./DownloadButtons";
-import QRCard from "./QRCard";
+
+import type { QRCanvasRef } from "./QRCanvas";
 
 interface PreviewPanelProps {
   value: string;
@@ -17,13 +19,13 @@ interface PreviewPanelProps {
 
 export default function PreviewPanel({
   value,
-  foreground,
   filename,
+  foreground,
   background,
   onForegroundChange,
   onBackgroundChange,
 }: PreviewPanelProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const qrRef = useRef<QRCanvasRef>(null);
 
   return (
     <div className="rounded-xl border border-zinc-200 bg-white p-6">
@@ -31,7 +33,7 @@ export default function PreviewPanel({
 
       <div className="mt-6 flex justify-center">
         <QRCard
-          ref={cardRef}
+          ref={qrRef}
           value={value}
           foreground={foreground}
           background={background}
@@ -54,7 +56,7 @@ export default function PreviewPanel({
       </div>
 
       <div className="mt-6">
-        <DownloadButtons cardRef={cardRef} filename={filename} />
+        <DownloadButtons qrRef={qrRef} filename={filename} />
       </div>
     </div>
   );

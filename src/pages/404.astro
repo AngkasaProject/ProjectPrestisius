@@ -1,0 +1,23 @@
+---
+import "@/styles/global.css";
+
+import ErrorPage from "@/components/error/ErrorPage";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>404 - Page Not Found | TRIMIT</title>
+  </head>
+
+  <body>
+    <ErrorPage
+      client:only="react"
+      code={404}
+      title="Page Not Found"
+      description="Sorry, your destination doesn't exist, has been moved, or... hasn't been created yet, hehehe."
+    />
+  </body>
+</html>

@@ -1,5 +1,9 @@
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import QRCodeStyling from "qr-code-styling";
+
+export interface QRCanvasRef {
+  download: (filename: string) => Promise<void>;
+}
 
 interface Props {
   value: string;
@@ -8,26 +12,92 @@ interface Props {
   background: string;
 
   logo?: string;
+
+  size?: number;
+
+  margin?: number;
 }
 
-export default function QRCanvas({
-  value,
-  foreground,
-  background,
-  logo = "/brand/logo-kotak.png",
-}: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const qrRef = useRef<QRCodeStyling | null>(null);
+const QRCanvas = forwardRef<QRCanvasRef, Props>(
+  (
+    {
+      value,
+      foreground,
+      background,
+      logo = "/brand/logo-kotak.png",
+      size = 305,
+      margin = 8,
+    },
+    ref,
+  ) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const qrRef = useRef<QRCodeStyling | null>(null);
 
-  useEffect(() => {
-    if (!qrRef.current) {
-      qrRef.current = new QRCodeStyling({
-        width: 305,
-        height: 305,
+    useImperativeHandle(ref, () => ({
+      async download(filename: string) {
+        if (!qrRef.current) return;
+
+        await qrRef.current.download({
+          name: filename,
+          extension: "png",
+        });
+      },
+    }));
+
+    useEffect(() => {
+      if (!containerRef.current) return;
+
+      if (!qrRef.current) {
+        qrRef.current = new QRCodeStyling({
+          type: "svg",
+
+          width: size,
+          height: size,
+
+          data: value || " ",
+
+          margin,
+
+          image: logo,
+
+          dotsOptions: {
+            color: foreground,
+            type: "rounded",
+          },
+
+          cornersSquareOptions: {
+            color: foreground,
+            type: "extra-rounded",
+          },
+
+          cornersDotOptions: {
+            color: foreground,
+            type: "dot",
+          },
+
+          backgroundOptions: {
+            color: background,
+          },
+
+          imageOptions: {
+            crossOrigin: "anonymous",
+            margin: 6,
+            imageSize: 0.28,
+          },
+        });
+
+        qrRef.current.append(containerRef.current);
+      }
+    }, []);
+
+    useEffect(() => {
+      qrRef.current?.update({
+        width: size,
+        height: size,
 
         data: value || " ",
 
-        margin: 8,
+        margin,
 
         image: logo,
 
@@ -56,52 +126,20 @@ export default function QRCanvas({
           imageSize: 0.28,
         },
       });
+    }, [value, foreground, background, logo, size, margin]);
 
-      if (containerRef.current) {
-        qrRef.current.append(containerRef.current);
-      }
-    }
-  }, []);
+    return (
+      <div
+        ref={containerRef}
+        style={{
+          width: size,
+          height: size,
+        }}
+      />
+    );
+  },
+);
 
-  useEffect(() => {
-    qrRef.current?.update({
-      width: 305,
-      height: 305,
+QRCanvas.displayName = "QRCanvas";
 
-      data: value || " ",
-
-      margin: 8,
-
-      image: logo,
-
-      dotsOptions: {
-        color: foreground,
-        type: "rounded",
-      },
-
-      cornersSquareOptions: {
-        color: foreground,
-        type: "extra-rounded",
-      },
-
-      cornersDotOptions: {
-        color: foreground,
-        type: "dot",
-      },
-
-      backgroundOptions: {
-        color: background,
-      },
-    });
-  }, [value, foreground, background, logo]);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{
-        width: 320,
-        height: 320,
-      }}
-    />
-  );
-}
+export default QRCanvas;
