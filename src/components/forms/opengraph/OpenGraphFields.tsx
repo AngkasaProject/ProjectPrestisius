@@ -9,12 +9,14 @@ type Props = {
 
   imageFile: File | null;
   imageUrl: string | null;
+  imageId: string | null;
 
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
 
   onImageFileChange: (file: File | null) => void;
   onImageUrlChange: (url: string | null) => void;
+  onImageIdChange: (id: string | null) => void;
 };
 
 export default function OpenGraphFields({
@@ -23,12 +25,14 @@ export default function OpenGraphFields({
 
   imageFile,
   imageUrl,
+  imageId,
 
   onTitleChange,
   onDescriptionChange,
 
   onImageFileChange,
   onImageUrlChange,
+  onImageIdChange,
 }: Props) {
   const [showLibrary, setShowLibrary] = useState(false);
 
@@ -106,6 +110,7 @@ export default function OpenGraphFields({
 
               if (file) {
                 onImageUrlChange(null);
+                onImageIdChange(null);
               }
             }}
           />
@@ -128,6 +133,7 @@ export default function OpenGraphFields({
               onSelect={(image) => {
                 onImageFileChange(null);
                 onImageUrlChange(image.url);
+                onImageIdChange(image.id);
 
                 setShowLibrary(false);
               }}

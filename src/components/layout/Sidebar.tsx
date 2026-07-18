@@ -64,6 +64,18 @@ lg:translate-x-0
           />
 
           <NavItem
+            active={pathname.startsWith("/admin/qr")}
+            title="QR Maker"
+            href="/admin/qr"
+          />
+
+          <NavItem
+            active={pathname.startsWith("/admin/images")}
+            title="Images Library"
+            href="/admin/images"
+          />
+
+          <NavItem
             active={pathname.startsWith("/admin/analytics")}
             title="Analytics"
             href="/admin/analytics"

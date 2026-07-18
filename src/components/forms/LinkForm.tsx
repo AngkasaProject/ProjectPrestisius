@@ -43,6 +43,9 @@ export default function LinkForm({
   const [ogImageUrl, setOgImageUrl] = useState<string | null>(
     initialData?.og_image_url ?? null,
   );
+  const [ogImageId, setOgImageId] = useState<string | null>(
+    initialData?.og_image_id ?? null,
+  );
   const [ogImageFile, setOgImageFile] = useState<File | null>(null);
   const [ogMode, setOgMode] = useState<"destination" | "custom">(
     initialData?.og_mode ?? "destination",
@@ -100,6 +103,7 @@ export default function LinkForm({
 
           ogImage: ogImageFile,
           ogImageUrl,
+          ogImageId,
         });
       } else {
         await updateLink({
@@ -116,6 +120,7 @@ export default function LinkForm({
 
           ogImage: ogImageFile,
           ogImageUrl,
+          ogImageId,
 
           currentOgImageUrl: initialData?.og_image_url ?? null,
         });

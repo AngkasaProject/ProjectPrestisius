@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+import { supabase } from "@/lib/supabase/client";
 import { Menu } from "lucide-react";
 
 import BrandLogo from "./BrandLogo";
@@ -16,7 +16,7 @@ export default function PublicNavbar() {
   const featuresRef = useRef<HTMLDivElement>(null);
 
   // TODO: Supabase Auth
-  const isLoggedIn = false;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -28,6 +28,33 @@ export default function PublicNavbar() {
     window.addEventListener("scroll", onScroll);
 
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function checkSession() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (mounted) {
+        setIsLoggedIn(!!session);
+      }
+    }
+
+    checkSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {

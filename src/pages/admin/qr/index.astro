@@ -1,0 +1,37 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import AppShell from "@/components/layout/AppShell";
+
+import QRStudioPage from "@/components/pages/QRStudioPage";
+---
+
+<DashboardLayout title="QR Studio">
+
+  <AppShell client:load>
+
+    <div class="space-y-6">
+
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+          <h1 class="text-3xl font-bold">
+            QR Studio
+          </h1>
+
+          <p class="text-zinc-500">
+            Generate QR codes from your links or custom URLs.
+          </p>
+        </div>
+
+      </div>
+
+      <QRStudioPage
+  client:load
+  origin={Astro.url.origin}
+/>
+
+    </div>
+
+  </AppShell>
+
+</DashboardLayout>

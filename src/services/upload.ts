@@ -25,6 +25,7 @@ export async function uploadImageRequest(
   }
 
   return json as {
+    id: string;
     path: string;
     url: string;
   };

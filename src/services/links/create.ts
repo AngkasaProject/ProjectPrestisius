@@ -16,6 +16,7 @@ type Params = {
 
   // Dipilih dari Media Library
   ogImageUrl: string | null;
+  ogImageId?: string | null;
 };
 
 export async function createLink({
@@ -28,6 +29,7 @@ export async function createLink({
   ogDescription,
   ogImage,
   ogImageUrl,
+  ogImageId,
 }: Params) {
   const token = await getAccessToken();
 
@@ -36,14 +38,15 @@ export async function createLink({
   }
 
   let finalImageUrl = ogImageUrl;
+  let finalImageId = ogImageId ?? null;
 
   // Upload hanya jika user memilih file baru
   if (ogMode === "custom" && ogImage) {
     const uploaded = await uploadImageRequest(ogImage, "custom-og", token);
 
     finalImageUrl = uploaded.url;
+    finalImageId = uploaded.id;
   }
-
   const res = await fetch("/api/links", {
     method: "POST",
 
@@ -61,7 +64,9 @@ export async function createLink({
       og_mode: ogMode,
       og_title: ogTitle,
       og_description: ogDescription,
+
       og_image_url: finalImageUrl,
+      og_image_id: finalImageId,
     }),
   });
 

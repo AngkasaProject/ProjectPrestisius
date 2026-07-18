@@ -24,6 +24,7 @@ type CreateLinkPayload = {
   og_title: string | null;
   og_description: string | null;
   og_image_url: string | null;
+  og_image_id: string | null;
 };
 
 export async function createLink(payload: CreateLinkPayload) {
@@ -72,6 +73,8 @@ export async function updateLink(
     og_title: string | null;
     og_description: string | null;
     og_image_url: string | null;
+
+    og_image_id: string | null;
   },
 ) {
   const { data, error } = await supabase

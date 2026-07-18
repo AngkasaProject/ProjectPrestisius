@@ -1,0 +1,40 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import AppShell from "@/components/layout/AppShell";
+
+import Button from "@/components/ui/Button";
+
+import ImagesPage from "@/components/pages/ImagesPage";
+---
+
+<DashboardLayout title="Images">
+
+  <AppShell client:load>
+
+    <div class="space-y-6">
+
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+          <h1 class="text-3xl font-bold">
+            Images
+          </h1>
+
+          <p class="text-zinc-500">
+            Manage your uploaded images.
+          </p>
+        </div>
+
+        <Button client:load>
+          + Upload Image
+        </Button>
+
+      </div>
+
+      <ImagesPage client:load />
+
+    </div>
+
+  </AppShell>
+
+</DashboardLayout>

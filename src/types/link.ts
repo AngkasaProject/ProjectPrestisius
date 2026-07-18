@@ -9,6 +9,7 @@ export interface Link {
   og_title: string | null;
   og_description: string | null;
   og_image_url: string | null;
+  og_image_id: string | null;
 
   clicks: number;
   created_at: string;

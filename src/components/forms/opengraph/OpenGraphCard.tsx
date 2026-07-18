@@ -9,6 +9,7 @@ type Props = {
 
   imageFile: File | null;
   imageUrl: string | null;
+  imageId: string | null;
 
   onChange: (value: "destination" | "custom") => void;
 
@@ -17,6 +18,8 @@ type Props = {
 
   onImageFileChange: (file: File | null) => void;
   onImageUrlChange: (url: string | null) => void;
+
+  onImageIdChange: (id: string | null) => void;
 };
 
 export default function OpenGraphCard({
@@ -26,6 +29,7 @@ export default function OpenGraphCard({
 
   imageFile,
   imageUrl,
+  imageId,
 
   onChange,
 
@@ -34,6 +38,7 @@ export default function OpenGraphCard({
 
   onImageFileChange,
   onImageUrlChange,
+  onImageIdChange,
 }: Props) {
   return (
     <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6">
@@ -97,10 +102,12 @@ export default function OpenGraphCard({
               description={description}
               imageFile={imageFile}
               imageUrl={imageUrl}
+              imageId={imageId}
               onTitleChange={onTitleChange}
               onDescriptionChange={onDescriptionChange}
               onImageFileChange={onImageFileChange}
               onImageUrlChange={onImageUrlChange}
+              onImageIdChange={onImageIdChange}
             />
           </div>
         )}

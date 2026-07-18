@@ -93,7 +93,9 @@ export const POST: APIRoute = async ({ request }) => {
       og_mode: body.og_mode ?? "destination",
       og_title: body.og_title ?? null,
       og_description: body.og_description ?? null,
+
       og_image_url: body.og_image_url ?? null,
+      og_image_id: body.og_image_id ?? null,
     });
 
     return Response.json(link, {
