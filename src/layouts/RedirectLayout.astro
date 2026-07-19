@@ -2,6 +2,8 @@
 import "@/styles/global.css";
 import { site } from "@/config/site";
 
+import { getStorageUrl } from "@/lib/storage";
+
 interface Props {
   title: string;
   description: string;
@@ -14,10 +16,12 @@ const {
   image,
 } = Astro.props;
 
-const imageUrl = image
-  ? image.startsWith("http")
-    ? image
-    : new URL(image, site.url).toString()
+
+const resolvedImage = getStorageUrl(image);
+
+
+const imageUrl = resolvedImage !== "" 
+  ? resolvedImage 
   : new URL("/brand/logo-kotak.png", site.url).toString();
 
 const canonical = Astro.url.href;
@@ -41,10 +45,7 @@ const canonical = Astro.url.href;
       content={description}
     />
 
-    <meta
-      name="robots"
-      content="noindex,nofollow"
-    />
+    {/* 🛠️ DIHAPUS: meta robots noindex dikeluarkan agar crawler medsos mau membaca halaman ini */}
 
     <meta
       property="og:type"
