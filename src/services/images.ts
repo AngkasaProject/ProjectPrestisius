@@ -1,4 +1,16 @@
 import { supabase } from "@/lib/supabase/server";
+import { getStorageUrl } from "@/lib/storage";
+
+interface DatabaseImage {
+  id: string;
+  user_id: string;
+  path: string;
+  url: string;
+  filename: string;
+  mime_type: string;
+  size: number;
+  created_at: string;
+}
 
 export async function createImage(payload: {
   user_id: string;
@@ -30,7 +42,14 @@ export async function getUserImages(userId: string) {
 
   if (error) throw error;
 
-  return data ?? [];
+  if (!data) return [];
+
+  return (data as DatabaseImage[]).map((image) => {
+    return {
+      ...image,
+      url: getStorageUrl(image.path || image.url),
+    };
+  });
 }
 
 export async function getImageById(id: string) {
@@ -72,7 +91,6 @@ export async function deleteImage(id: string, userId: string) {
     throw new Error("This image is currently used by one or more links.");
   }
 
-  // Menghapus data metadata gambar dari tabel Supabase
   const { error } = await supabase.from("images").delete().eq("id", id);
 
   if (error) throw error;

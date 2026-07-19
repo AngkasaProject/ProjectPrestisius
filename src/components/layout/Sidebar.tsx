@@ -2,13 +2,14 @@ import Logo from "./Logo";
 import NavItem from "./NavItem";
 import { LogOut } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+// Impor CustomUser yang sudah kita buat di AppShell sebelumnya
+import type { CustomUser } from "./AppShell";
 
 type Props = {
   open: boolean;
   close: () => void;
   pathname: string;
-  user: User | null;
+  user: CustomUser | null;
 };
 
 async function handleLogout() {
@@ -57,6 +58,15 @@ lg:translate-x-0
             href="/admin"
           />
 
+          {/* MENU KHUSUS ADMIN: Hanya muncul jika role akun adalah admin */}
+          {user?.role === "admin" && (
+            <NavItem
+              active={pathname.startsWith("/admin/global-stats")}
+              title="Admin Panel"
+              href="/admin/global-stats"
+            />
+          )}
+
           <NavItem
             active={pathname.startsWith("/admin/links")}
             title="Links"
@@ -91,17 +101,22 @@ lg:translate-x-0
         <div className="mt-auto border-t border-zinc-200 p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-200 font-semibold">
-              A
+              {/* Menampilkan inisial huruf besar dari nama depan atau email */}
+              {(
+                user?.user_metadata?.full_name?.[0] ||
+                user?.email?.[0] ||
+                "U"
+              ).toUpperCase()}
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="font-semibold">
+              <p className="font-semibold truncate">
                 {user?.user_metadata?.full_name ||
                   user?.email?.split("@")[0] ||
                   "User"}
               </p>
 
-              <p className="text-xs text-zinc-500">{user?.email}</p>
+              <p className="text-xs text-zinc-500 truncate">{user?.email}</p>
             </div>
           </div>
 

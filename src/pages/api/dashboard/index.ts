@@ -18,6 +18,7 @@ export const GET: APIRoute = async ({ request }) => {
       );
     }
 
+    // Tetap aman untuk semua role karena data diambil berdasarkan user.id masing-masing
     const dashboard = await getDashboardStats(user.id);
 
     return Response.json(dashboard);

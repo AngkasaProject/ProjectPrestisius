@@ -19,7 +19,21 @@ export async function getUserFromRequest(request: Request) {
     error,
   } = await supabase.auth.getUser(token);
 
-  if (error) return null;
+  if (error || !user) return null;
 
-  return user;
+  // Ambil data role dari tabel profiles berdasarkan user.id
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  // Jika profile tidak ketemu atau ada error, kita berikan default role 'user' demi keamanan
+  const role = !profileError && profile ? profile.role : "user";
+
+  // Kembalikan objek user bawaan Supabase, dibundel dengan property role baru
+  return {
+    ...user,
+    role: role as "user" | "admin",
+  };
 }

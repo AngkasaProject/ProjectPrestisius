@@ -13,16 +13,14 @@ if (!slug) {
 
 const { data: link } = await supabase
   .from("links")
-  .select("*")
+  .select("*, profiles(status)")
   .eq("slug", slug)
   .single();
 
-/**
- * Semua kondisi gagal menggunakan halaman 404
- */
-if (!link || !link.status) {
-  Astro.response.status = 404;
+const isSuspended = (link?.profiles as any)?.status === 'suspended';
 
+if (!link || !link.status || isSuspended) {
+  Astro.response.status = 404;
   return Astro.rewrite("/404");
 }
 
@@ -38,18 +36,11 @@ async function incrementClick() {
     .eq("id", link.id);
 }
 
-/**
- * Direct Link
- */
 if (!crawler && link.mode === "direct") {
   await incrementClick();
-
   return Astro.redirect(link.destination_url, 302);
 }
 
-/**
- * Flow Link
- */
 if (!crawler && link.mode === "flow") {
   await incrementClick();
 }
