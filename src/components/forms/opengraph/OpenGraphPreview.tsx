@@ -1,3 +1,5 @@
+import { getStorageUrl } from "@/lib/storage";
+
 type Props = {
   title: string;
   description: string;
@@ -12,9 +14,12 @@ export default function OpenGraphPreview({
   imageFile,
   imageUrl,
 }: Props) {
+  // MEMBUAT PRATINJAU GAMBAR DENGAN HELPER R2 URL
   const previewImage = imageFile
     ? URL.createObjectURL(imageFile)
-    : (imageUrl ?? "/brand/logo-kotak.png");
+    : imageUrl
+      ? getStorageUrl(imageUrl)
+      : "/brand/logo-kotak.png";
 
   return (
     <>

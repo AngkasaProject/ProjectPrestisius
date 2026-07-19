@@ -1,6 +1,8 @@
 import OpenGraphFields from "./OpenGraphFields";
 import OpenGraphPreview from "./OpenGraphPreview";
 
+import { getStorageUrl } from "@/lib/storage";
+
 type Props = {
   value: "destination" | "custom";
 
@@ -40,6 +42,8 @@ export default function OpenGraphCard({
   onImageUrlChange,
   onImageIdChange,
 }: Props) {
+  const fullImageUrl = getStorageUrl(imageUrl);
+
   return (
     <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6">
       <div>
@@ -86,6 +90,7 @@ export default function OpenGraphCard({
             </p>
           </div>
         </label>
+
         {value === "custom" && (
           <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[380px_1fr]">
             <div className="lg:sticky lg:top-24 lg:self-start">
@@ -93,7 +98,7 @@ export default function OpenGraphCard({
                 title={title}
                 description={description}
                 imageFile={imageFile}
-                imageUrl={imageUrl}
+                imageUrl={fullImageUrl}
               />
             </div>
 
@@ -101,7 +106,7 @@ export default function OpenGraphCard({
               title={title}
               description={description}
               imageFile={imageFile}
-              imageUrl={imageUrl}
+              imageUrl={fullImageUrl}
               imageId={imageId}
               onTitleChange={onTitleChange}
               onDescriptionChange={onDescriptionChange}

@@ -1,5 +1,4 @@
 import { supabase } from "@/lib/supabase/server";
-import { deleteImage as deleteStorageImage } from "@/services/storage";
 
 export async function createImage(payload: {
   user_id: string;
@@ -33,6 +32,7 @@ export async function getUserImages(userId: string) {
 
   return data ?? [];
 }
+
 export async function getImageById(id: string) {
   const { data, error } = await supabase
     .from("images")
@@ -72,8 +72,7 @@ export async function deleteImage(id: string, userId: string) {
     throw new Error("This image is currently used by one or more links.");
   }
 
-  await deleteStorageImage(image.path);
-
+  // Menghapus data metadata gambar dari tabel Supabase
   const { error } = await supabase.from("images").delete().eq("id", id);
 
   if (error) throw error;

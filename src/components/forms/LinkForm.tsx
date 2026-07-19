@@ -165,12 +165,13 @@ export default function LinkForm({
           description={ogDescription}
           imageFile={ogImageFile}
           imageUrl={ogImageUrl}
+          imageId={ogImageId}
           onTitleChange={setOgTitle}
           onDescriptionChange={setOgDescription}
           onImageFileChange={setOgImageFile}
           onImageUrlChange={setOgImageUrl}
+          onImageIdChange={setOgImageId}
         />
-
         <LinkPreviewSection preview={preview} onCopy={copyPreview} />
 
         <LinkActionSection
