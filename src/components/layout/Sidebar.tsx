@@ -2,7 +2,7 @@ import Logo from "./Logo";
 import NavItem from "./NavItem";
 import { LogOut } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
-// Impor CustomUser yang sudah kita buat di AppShell sebelumnya
+import { getStorageUrl } from "@/lib/storage";
 import type { CustomUser } from "./AppShell";
 
 type Props = {
@@ -24,6 +24,18 @@ async function handleLogout() {
 }
 
 export default function Sidebar({ open, close, pathname, user }: Props) {
+  const avatar = user?.profile?.avatar_url
+    ? getStorageUrl(user.profile.avatar_url)
+    : null;
+
+  const displayName =
+    user?.profile?.full_name ||
+    user?.user_metadata?.full_name ||
+    user?.email?.split("@")[0] ||
+    "User";
+
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
     <>
       <div
@@ -58,8 +70,7 @@ lg:translate-x-0
             href="/admin"
           />
 
-          {/* MENU KHUSUS ADMIN: Hanya muncul jika role akun adalah admin */}
-          {user?.role === "admin" && (
+          {user?.profile?.role === "admin" && (
             <NavItem
               active={pathname.startsWith("/admin/global-stats")}
               title="Admin Panel"
@@ -100,23 +111,22 @@ lg:translate-x-0
 
         <div className="mt-auto border-t border-zinc-200 p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-200 font-semibold">
-              {/* Menampilkan inisial huruf besar dari nama depan atau email */}
-              {(
-                user?.user_metadata?.full_name?.[0] ||
-                user?.email?.[0] ||
-                "U"
-              ).toUpperCase()}
-            </div>
+            {avatar ? (
+              <img
+                src={avatar}
+                alt={displayName}
+                className="h-11 w-11 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-200 font-semibold">
+                {initial}
+              </div>
+            )}
 
             <div className="min-w-0 flex-1">
-              <p className="font-semibold truncate">
-                {user?.user_metadata?.full_name ||
-                  user?.email?.split("@")[0] ||
-                  "User"}
-              </p>
+              <p className="truncate font-semibold">{displayName}</p>
 
-              <p className="text-xs text-zinc-500 truncate">{user?.email}</p>
+              <p className="truncate text-xs text-zinc-500">{user?.email}</p>
             </div>
           </div>
 

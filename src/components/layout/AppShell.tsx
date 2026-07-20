@@ -4,8 +4,16 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 
-// Kita buat tipe data CustomUser untuk memperluas User bawaan Supabase agar memiliki properti role
-export type CustomUser = User & { role?: "user" | "admin" };
+export type UserProfile = {
+  role: "user" | "admin";
+  full_name: string | null;
+  avatar_url: string | null;
+  username: string | null;
+};
+
+export type CustomUser = User & {
+  profile?: UserProfile;
+};
 
 type Props = {
   children: React.ReactNode;
@@ -15,7 +23,6 @@ export default function AppShell({ children }: Props) {
   const [sidebar, setSidebar] = useState(false);
   const [loading, setLoading] = useState(true);
   const [pathname, setPathname] = useState("/");
-  // State user kita ubah tipenya agar mendukung CustomUser
   const [user, setUser] = useState<CustomUser | null>(null);
 
   useEffect(() => {
@@ -34,17 +41,27 @@ export default function AppShell({ children }: Props) {
           return;
         }
 
-        // Ambil data role dari tabel profiles berdasarkan id user yang sedang login
         const { data: profile } = await supabase
           .from("profiles")
-          .select("role")
+          .select(
+            `
+            role,
+            full_name,
+            avatar_url,
+            username
+          `,
+          )
           .eq("id", session.user.id)
           .single();
 
-        // Gabungkan data session user dengan properti role yang didapat
         const customUser: CustomUser = {
           ...session.user,
-          role: profile?.role || "user",
+          profile: {
+            role: profile?.role ?? "user",
+            full_name: profile?.full_name ?? null,
+            avatar_url: profile?.avatar_url ?? null,
+            username: profile?.username ?? null,
+          },
         };
 
         setUser(customUser);
@@ -59,7 +76,7 @@ export default function AppShell({ children }: Props) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
-      (event: AuthChangeEvent, session: Session | null) => {
+      (_event: AuthChangeEvent, session: Session | null) => {
         if (!session) {
           window.location.replace("/login");
         }

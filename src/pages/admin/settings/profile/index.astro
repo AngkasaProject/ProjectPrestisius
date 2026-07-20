@@ -1,0 +1,34 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import AppShell from "@/components/layout/AppShell";
+import ProfileForm from "@/components/settings/ProfileForm";
+---
+
+<DashboardLayout title="Profile">
+  <AppShell client:load>
+    <div class="mx-auto w-full max-w-2xl space-y-8">
+
+      <div class="space-y-4">
+        <a
+          href="/admin/settings"
+          class="inline-flex items-center gap-2 text-sm text-zinc-500 transition hover:text-zinc-900"
+        >
+          ← Back
+        </a>
+
+        <div>
+          <h1 class="text-3xl font-bold">
+            Profile
+          </h1>
+
+          <p class="mt-2 text-zinc-500">
+            Manage your public profile.
+          </p>
+        </div>
+      </div>
+
+      <ProfileForm client:load />
+
+    </div>
+  </AppShell>
+</DashboardLayout>
