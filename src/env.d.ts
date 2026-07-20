@@ -9,3 +9,20 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare namespace App {
+  interface Locals {
+    runtime?: {
+      env: {
+        SUPABASE_URL: string;
+        SUPABASE_ANON_KEY: string;
+        [key: string]: any;
+      };
+      ctx: {
+        waitUntil(promise: Promise<any>): void;
+        passThroughOnException(): void;
+      };
+      caches: CacheStorage & { default: Cache };
+    };
+  }
+}
