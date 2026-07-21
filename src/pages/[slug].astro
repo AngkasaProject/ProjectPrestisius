@@ -11,21 +11,6 @@ if (!slug) {
   return Astro.redirect("/");
 }
 
-const requestUrl = Astro.request.url;
-const cacheKey = new Request(requestUrl, Astro.request);
-const cache = typeof caches !== 'undefined' ? (caches as CacheStorage & { default: Cache }).default : null;
-const runtime = Astro.locals.runtime;
-
-const userAgent = Astro.request.headers.get("user-agent") ?? "";
-const crawler = isCrawler(userAgent);
-
-if (!crawler && cache) {
-  let cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-}
-
 const { data: link } = await supabase
   .from("links")
   .select("*, profiles(status)")
@@ -39,30 +24,25 @@ if (!link || !link.status || isSuspended) {
   return Astro.rewrite("/404");
 }
 
-if (!crawler) {
-  const updatePromise = (async () => {
-    await supabase
-      .from("links")
-      .update({ clicks: (link.clicks ?? 0) + 1 })
-      .eq("id", link.id);
-  })();
+const userAgent = Astro.request.headers.get("user-agent") ?? "";
+const crawler = isCrawler(userAgent);
 
-  if (runtime?.ctx?.waitUntil) {
-    runtime.ctx.waitUntil(updatePromise);
-  } else {
-    updatePromise.catch(() => {});
-  }
+async function incrementClick() {
+  await supabase
+    .from("links")
+    .update({
+      clicks: (link.clicks ?? 0) + 1,
+    })
+    .eq("id", link.id);
 }
 
 if (!crawler && link.mode === "direct") {
-  const directResponse = Astro.redirect(link.destination_url, 302);
-  directResponse.headers.set('Cache-Control', 'public, max-age=3600');
-  
-  if (runtime?.ctx?.waitUntil && cache) {
-    runtime.ctx.waitUntil(cache.put(cacheKey, directResponse.clone()));
-  }
-  
-  return directResponse;
+  await incrementClick();
+  return Astro.redirect(link.destination_url, 302);
+}
+
+if (!crawler && link.mode === "flow") {
+  await incrementClick();
 }
 
 const hostname = new URL(link.destination_url).hostname;
